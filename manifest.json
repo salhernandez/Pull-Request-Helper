@@ -1,0 +1,22 @@
+{
+	"manifest_version": 2,
+	"name": "PR Helper",
+	"description": "PR Helper",
+	"version": "1.0",
+	"author": "Salvador Hernandez",
+	"background": {
+		"scripts": [
+			"popup.js"
+		],
+		"persistent": true
+	},
+	"browser_action": {
+		"default_popup": "popup.html"
+	},
+	"permissions": [
+		"tabs",
+		"http://*/",
+		"https://*/",
+		"storage"
+	]
+}
