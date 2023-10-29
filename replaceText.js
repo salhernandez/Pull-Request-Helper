@@ -46,8 +46,6 @@ cirosantilli_load_scripts.loaded = new Set();
 })();
 
 
-
-
 async function cirosantilli_load_scripts(script_urls) {
     function load(script_url) {
         return new Promise(function(resolve, reject) {
@@ -101,8 +99,20 @@ function yourCodeToBeCalled(){
         onReady: () => {
             new DragDrop(PRHEditor);
             new Undo({ PRHEditor });
+            console.log('Editor.js is ready to work!');
         },
-    
+        onChange: (api, event) => {
+            console.log('change', {api}, {event});
+
+            // TODO: Only save every second, add a timer!
+            // Save Data
+            api.saver.save()
+            .then((outputData) => {
+                console.log('Saved data: ', outputData)
+            }).catch((error) => {
+                console.log('Saving failed: ', error)
+            });
+        },
         /** 
          * Available Tools list. 
          * Pass Tool's class or Settings object for each Tool you want to use 
