@@ -20,25 +20,6 @@ window.addEventListener('load', () => {
 // When a tab is finished loading
 chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
   if (changeInfo.status == 'complete') {
-    // storage.get('options', (items) => {
-    //   if (items.options.userOptions.replaceWithEmojis) {
-    //     chrome.tabs.executeScript(tabId, {
-    //       file: "replaceText.js"
-    //     }, () => {
-    //       // If you try and inject into an extensions page or the webstore/NTP you'll get an error
-    //       if (chrome.runtime.lastError) {
-    //         // message.innerText = 'There was an error injecting script : \n' + chrome.runtime.lastError.message;
-    //         console.log('There was an error injecting script : \n' + chrome.runtime.lastError.message);
-    //       }
-    //     });
-    //   }
-    // });
-
-    
-  storage.get(window.location.origin + window.location.pathname, (items) => {
-    console.log("reading contents of tratch", items[window.location.origin + window.location.pathname]);
-  });
-
     // SEND MESSAGE - 3
     chrome.runtime.onMessage.addListener(function(request, sender) {
         if (request.type == "PRH_MESSAGE"){
@@ -52,18 +33,39 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
         }   
     });
 
-    console.log("executing script");
-    chrome.tabs.executeScript(tabId, {
-        file: "replaceText.js"
-      }, () => {
-        // If you try and inject into an extensions page or the webstore/NTP you'll get an error
-        if (chrome.runtime.lastError) {
-          // message.innerText = 'There was an error injecting script : \n' + chrome.runtime.lastError.message;
-          console.log('There was an error injecting script : \n' + chrome.runtime.lastError.message);
-        }
-      });
+    chrome.tabs.query({
+        active: true,
+        currentWindow: true
+    }, function(tabs) {
+        var tabURL = tabs[0].url;
+        executeStuff(tabId, new URL(tabURL))
+
+    });
   }
 })
+
+
+executeStuff = (tabId, urlObj) => {
+    storage.get(urlObj.origin + urlObj.pathname, (items) => {
+        let key = urlObj.origin + urlObj.pathname;
+        let data = items[key];
+        console.log(`reading contents of ${key}`, data);
+
+        chrome.tabs.executeScript(tabId, {
+            // Inject JSON variable before script is executed!
+            code: `var dataFromStorage = ${JSON.stringify(data)}`,
+          }, () => {
+            // If you try and inject into an extensions page or the webstore/NTP you'll get an error
+            if (chrome.runtime.lastError) {
+              // message.innerText = 'There was an error injecting script : \n' + chrome.runtime.lastError.message;
+              console.log('There was an error injecting script : \n' + chrome.runtime.lastError.message);
+            }
+
+            chrome.tabs.executeScript(tabId, {file: "replaceText.js"});
+
+          });
+      });
+}
 
 onSwitchChange = (event) => {
   let emojiButton = document.getElementById('checkbox');

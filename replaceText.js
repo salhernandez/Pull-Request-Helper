@@ -2,6 +2,8 @@ const editorURL = 'https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest';
 const editorID = 'PRHELPER-editor';
 var reviewThread;
 
+console.log({dataFromStorage});
+
 StringToEmoji(document);
 
 cirosantilli_load_scripts.loaded = new Set();
