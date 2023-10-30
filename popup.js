@@ -2,8 +2,9 @@ var storage = chrome.storage.local;
 
 const SAMPLE_OBJ = {
     "<URL>": {
-        "id": "<id>",
-        "data": "<data>"
+        "<id>": {
+            "data": "<data>"
+        }
     }
 }
 
@@ -26,8 +27,9 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
             console.log("tehee", request.options.details);
             chrome.storage.local.set({
                 [request.options.details.url]: {
-                    "id": request.options.details.id,
-                    "data": request.options.details.dataToSave
+                    [request.options.details.id]: {
+                        "data": request.options.details.dataToSave
+                    }
                 }
             });
         }   
