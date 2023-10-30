@@ -4,7 +4,6 @@ console.log({dataFromStorage});
 
 var reviewThread;
 
-
 StringToEmoji(document);
 
 cirosantilli_load_scripts.loaded = new Set();
@@ -12,6 +11,7 @@ cirosantilli_load_scripts.loaded = new Set();
 
 (async () => {
     await cirosantilli_load_scripts([
+        editorURL,
         'https://cdn.jsdelivr.net/npm/@editorjs/header@2.7.0/dist/bundle.min.js',
         'https://cdn.jsdelivr.net/npm/@editorjs/table@2.2.2/dist/table.min.js',
         'https://cdn.jsdelivr.net/npm/@editorjs/delimiter@1.3.0/dist/bundle.min.js',
@@ -34,19 +34,7 @@ cirosantilli_load_scripts.loaded = new Set();
     console.log("stuff has loaded")
 
     // Now do stuff with those scripts.
-})();
-
-// loadJS(editorURL, yourCodeToBeCalled, document.body);
-
-(async () => {
-    await cirosantilli_load_scripts([
-        editorURL,
-    ]);
-
-
-    // Now do stuff with those scripts.
     yourCodeToBeCalled();
-
 })();
 
 
