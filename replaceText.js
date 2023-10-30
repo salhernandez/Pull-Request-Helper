@@ -203,19 +203,32 @@ function yourCodeToBeCalled(){
         tunes: ['textVariant']
     });
     `
-    document.getElementsByTagName('head')[0].appendChild(s);
+    document.getElementsByTagName('head')[0].appendChild(s); 
 }
 
 function StringToEmoji(document_root) {    
+    let finalElement;
+    const reviewComment = document_root.querySelectorAll('[data-body-version]');
+    const threadComment = document_root.querySelectorAll('[id^=review-thread-or-comment]');
 
-    const reviewThread = document_root.querySelectorAll('[id^=review-thread-or-comment]')[0];
-    reviewThreadIds.push(reviewThread.id);
+    if(reviewComment.length){
+        finalElement = reviewComment[0];
+        reviewThreadIds.push(finalElement.id);
+    } else if (threadComment.length){
+        finalElement = threadComment[0];
+        reviewThreadIds.push(finalElement.id);
+    } else {
+        return;
+    }
+
+
+    // data-body-version="84d62e7000dcec8774b864216601d3c44b0aa28d374da8d1c4360017f5ac5478"
     const wrapperDiv = document_root.createElement('div');
     wrapperDiv.className = "derp";
 
     const editorContainer = document_root.createElement('div');
-    editorContainer.style.width = `${reviewThread.offsetWidth.toString()}px`;
-    editorContainer.style.height = `${reviewThread.offsetHeight.toString()}px`;
+    editorContainer.style.width = `${finalElement.offsetWidth.toString()}px`;
+    editorContainer.style.height = `${finalElement.offsetHeight.toString()}px`;
     editorContainer.style.backgroundColor = 'gray';
     editorContainer.style.color = 'black';
     editorContainer.style.overflow = 'scroll';
@@ -223,8 +236,8 @@ function StringToEmoji(document_root) {
     
     editorContainer.id = editorID;
     
-    reviewThread.after(wrapperDiv);
-    wrapperDiv.append(reviewThread);
+    finalElement.after(wrapperDiv);
+    wrapperDiv.append(finalElement);
     wrapperDiv.append(editorContainer);
 
 }
