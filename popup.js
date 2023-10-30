@@ -18,31 +18,36 @@ window.addEventListener('load', () => {
 //   }
 });
 
+
 // When a tab is finished loading
-chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (changeInfo.status == 'complete') {
     // SEND MESSAGE - 3
-    chrome.runtime.onMessage.addListener(function(request, sender) {
-        if (request.type == "PRH_MESSAGE"){
-            console.log("tehee", request.options.details);
-            chrome.storage.local.set({
-                [request.options.details.url]: {
-                    [request.options.details.id]: {
-                        "data": request.options.details.dataToSave
+
+    if(tab.url.includes("https://github.com/") && tab.url.includes("/pull/")){
+        console.log("IS GITHUB PR");
+        chrome.runtime.onMessage.addListener(function(request, sender) {
+            if (request.type == "PRH_MESSAGE"){
+                console.log("tehee", request.options.details);
+                chrome.storage.local.set({
+                    [request.options.details.url]: {
+                        [request.options.details.id]: {
+                            "data": request.options.details.dataToSave
+                        }
                     }
-                }
-            });
-        }   
-    });
-
-    chrome.tabs.query({
-        active: true,
-        currentWindow: true
-    }, function(tabs) {
-        var tabURL = tabs[0].url;
-        executeStuff(tabId, new URL(tabURL))
-
-    });
+                });
+            }   
+        });
+    
+        chrome.tabs.query({
+            active: true,
+            currentWindow: true
+        }, function(tabs) {
+            var tabURL = tabs[0].url;
+            executeStuff(tabId, new URL(tabURL))
+    
+        });
+    }
   }
 })
 
