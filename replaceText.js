@@ -1,5 +1,6 @@
 const editorURL = 'https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest';
 const editorID = 'PRHELPER-editor';
+var reviewThread;
 
 StringToEmoji(document);
 
@@ -84,10 +85,18 @@ function loadJS(url, implementationCode, location){
     location.appendChild(scriptTag);
 };
 
+// SEND MESSAGE - 2
 //Listen for the event
 window.addEventListener("PassToBackground", function(evt) {
     // chrome.runtime.sendMessage(evt.detail);
-    console.log('PassToBackground', evt.detail)
+    console.log('PRH_MESSAGE', evt.detail)
+    //code to send message to open notification. This will eventually move into my extension logic
+    chrome.runtime.sendMessage({type: "PRH_MESSAGE", options: { 
+        details: {
+            ...evt.detail,
+            id: reviewThread.id
+        }
+    }});
   }, false);
 
   
@@ -115,8 +124,13 @@ function yourCodeToBeCalled(){
             // Save Data
             api.saver.save()
             .then((outputData) => {
+
+                // SEND MESSAGE - 1
                 console.log('Saved data: ', outputData)
-                var message = {"msg": "supp"};
+                var message = {
+                    "url": window.location.origin + window.location.pathname,
+                    "dataToSave": outputData
+                };
                 var event = new CustomEvent("PassToBackground", {detail: message});
                 window.dispatchEvent(event);
             }).catch((error) => {
@@ -191,7 +205,7 @@ function yourCodeToBeCalled(){
 
 function StringToEmoji(document_root) {    
 
-    const reviewThread = document_root.querySelectorAll('[id^=review-thread-or-comment]')[0];
+    reviewThread = document_root.querySelectorAll('[id^=review-thread-or-comment]')[0];
     const wrapperDiv = document_root.createElement('div');
     wrapperDiv.className = "derp";
 

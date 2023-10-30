@@ -1,5 +1,12 @@
 var storage = chrome.storage.local;
 
+const SAMPLE_OBJ = {
+    "<URL>": {
+        "id": "<id>",
+        "data": "<data>"
+    }
+}
+
 // When Chrome Extension popup fully loads
 window.addEventListener('load', () => {
 //   checkInstallType();
@@ -26,6 +33,25 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
     //     });
     //   }
     // });
+
+    
+  storage.get(window.location.origin + window.location.pathname, (items) => {
+    console.log("reading contents of tratch", items[window.location.origin + window.location.pathname]);
+  });
+
+    // SEND MESSAGE - 3
+    chrome.runtime.onMessage.addListener(function(request, sender) {
+        if (request.type == "PRH_MESSAGE"){
+            console.log("tehee", request.options.details);
+            chrome.storage.local.set({
+                [request.options.details.url]: {
+                    "id": request.options.details.id,
+                    "data": request.options.details.dataToSave
+                }
+            });
+        }   
+    });
+
     console.log("executing script");
     chrome.tabs.executeScript(tabId, {
         file: "replaceText.js"
