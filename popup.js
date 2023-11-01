@@ -25,10 +25,8 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     // SEND MESSAGE - 3
 
     if(tab.url.includes("https://github.com/") && tab.url.includes("/pull/")){
-        console.log("IS GITHUB PR");
         chrome.runtime.onMessage.addListener(function(request, sender) {
             if (request.type == "PRH_MESSAGE"){
-                console.log("tehee", request.options.details);
                 chrome.storage.local.set({
                     [request.options.details.url]: {
                         [request.options.details.id]: {
@@ -56,7 +54,6 @@ executeStuff = (tabId, urlObj) => {
     storage.get(urlObj.origin + urlObj.pathname, (items) => {
         let key = urlObj.origin + urlObj.pathname;
         let data = items[key];
-        console.log(`reading contents of ${key}`, data);
 
         chrome.tabs.executeScript(tabId, {
             // Inject JSON variable before script is executed!
