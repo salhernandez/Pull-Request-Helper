@@ -30,7 +30,6 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 
                 // Pseudo-state update
                 storage.get(request.options.details.url, (urlObjData) => {
-                    console.table(urlObjData);
                     chrome.storage.local.set({
                         [request.options.details.url]: {
                             ...urlObjData[request.options.details.url],
