@@ -27,13 +27,20 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     if(tab.url.includes("https://github.com/") && tab.url.includes("/pull/")){
         chrome.runtime.onMessage.addListener(function(request, sender) {
             if (request.type == "PRH_MESSAGE"){
-                chrome.storage.local.set({
-                    [request.options.details.url]: {
-                        [request.options.details.id]: {
-                            "data": request.options.details.dataToSave
+
+                // Pseudo-state update
+                storage.get(request.options.details.url, (urlObjData) => {
+                    console.table(urlObjData);
+                    chrome.storage.local.set({
+                        [request.options.details.url]: {
+                            ...urlObjData[request.options.details.url],
+                            [request.options.details.id]: {
+                                ...urlObjData[request.options.details.id],
+                                "data": request.options.details.dataToSave
+                            }
                         }
-                    }
-                });
+                    });
+                  });
             }   
         });
     
