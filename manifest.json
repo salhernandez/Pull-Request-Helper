@@ -18,6 +18,7 @@
 		"http://*/",
 		"https://*/",
 		"storage",
-        "tabs"
+        "tabs",
+        "unlimitedStorage"
 	]
 }
