@@ -68,6 +68,7 @@ function injectScriptToWebPage() {
         data: {
             blocks: ${data}
         },
+        placeholder: "Type your notes here...",
         /** 
          * Id of Element that should contain the Editor 
          */ 
@@ -209,8 +210,8 @@ function setEditorDivs(document_root) {
         let editorContainer = document_root.createElement('div');
         editorContainer.style.width = `${element.domNode.offsetWidth.toString()}px`;
         editorContainer.style.height = `${element.domNode.offsetHeight.toString()}px`;
-        editorContainer.style.backgroundColor = 'gray';
-        editorContainer.style.color = 'black';
+        editorContainer.style.backgroundColor = 'black';
+        editorContainer.style.color = 'gray';
         editorContainer.style.overflow = 'scroll';
 
 
