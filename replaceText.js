@@ -167,6 +167,7 @@ function injectScriptToWebPage() {
 function setEditorDivs(document_root) {
     const reviewComment = document_root.querySelectorAll('[data-body-version]');
     const threadComment = document_root.querySelectorAll('[id^=review-thread-or-comment]');
+    const diffFile = document_root.querySelectorAll('[data-details-container-group="file"]');
 
     // const schema = {
     //     id: "string",
@@ -197,6 +198,16 @@ function setEditorDivs(document_root) {
         });
     });
 
+    diffFile.forEach(element => {
+        reviewThreads.push({
+            id: element.id,
+            type: "thread-comment",
+            blocks: [],
+            domNode: element,
+            editorID: `PRH-${element.id}`
+        });
+    });
+
     // Nothing found
     if(!reviewThreads.length){
         return;
@@ -210,6 +221,7 @@ function setEditorDivs(document_root) {
         let editorContainer = document_root.createElement('div');
         editorContainer.style.width = `${element.domNode.offsetWidth.toString()}px`;
         editorContainer.style.height = `${element.domNode.offsetHeight.toString()}px`;
+        editorContainer.style.maxHeight = `200px`;
         editorContainer.style.backgroundColor = 'black';
         editorContainer.style.color = 'gray';
         editorContainer.style.overflow = 'scroll';
